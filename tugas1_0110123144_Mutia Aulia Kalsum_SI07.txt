@@ -1,0 +1,779 @@
+1. Buatlah database baru dengan nama: dbpegawai 
+MariaDB [(none)]> #Jawaban No 1 Create Databases
+MariaDB [(none)]> CREATE DATABASE dbpegawai;
+Query OK, 1 row affected (0.001 sec)
+
+2. Masuk ke dbpegawai dengan perintah USE
+MariaDB [(none)]> #Jawaban No 2
+MariaDB [(none)]> USE dbpegawai;
+Database changed
+
+3.Buatlah tabel baru dengan nama: divisi, dengan kolom-kolom sbb:
+id int primary key auto_increment
+nama varchar(30) dengan contraint: wajib diisi dan tidak boleh sama
+MariaDB [dbpegawai]> #Jawaban No 3
+MariaDB [dbpegawai]> create table divisi (
+    -> id int primary key auto_increment,
+    -> nama varchar(30) unique not null
+    -> );
+Query OK, 0 rows affected (0.043 sec)
+
+4.Tampilkan deskripsi tabel divisi 
+MariaDB [dbpegawai]> #Jawaban No 4
+MariaDB [dbpegawai]> show tables;
++---------------------+
+| Tables_in_dbpegawai |
++---------------------+
+| divisi              |
++---------------------+
+1 row in set (0.001 sec)
+
+5.Buatlah tabel baru dengan nama: jabatan, dengan kolom-kolom sbb:
+id int primary key auto_increment
+nama varchar(30) dengan contraint: wajib diisi dan tidak boleh sama
+MariaDB [dbpegawai]> #Jawaban No 5
+MariaDB [dbpegawai]> create table jabatan (
+    -> id int primary key auto_increment,
+    -> nama varchar(30) unique not null
+    -> );
+Query OK, 0 rows affected (0.067 sec)
+
+6.Tampilkan deskripsi tabel jabatan 
+MariaDB [dbpegawai]> #Jawaban No 6
+MariaDB [dbpegawai]> show tables;
++---------------------+
+| Tables_in_dbpegawai |
++---------------------+
+| divisi              |
+| jabatan             |
++---------------------+
+2 rows in set (0.001 sec)
+
+7.Buatlah tabel baru dengan nama: pegawai, dengan kolom-kolom sbb:
+id int primary key auto_increment
+nip char dengan constraint: wajib diisi, tidak boleh sama & 5 karakter
+nama varchar dengan constraint: wajib diisi dan maksimal 30 karakter
+gender enum('Laki-Laki','Perempuan') dengan constraint: wajib diisi
+tmp_lahir varchar dengan constraint: wajib diisi dan maksimal 30 karakter
+tgl_lahir date dengan constraint: wajib diisi
+iddivisi int sebagai foreign key, tidak boleh kosong, merujuk ke tabel divisi ke field id
+idjabatan int sebagai foreign key, tidak boleh kosong, merujuk ke tabel jabatan ke field id
+alamat text
+MariaDB [dbpegawai]> #Jawaban No 7
+MariaDB [dbpegawai]> create table pegawai (
+    -> id int primary key auto_increment,
+    -> nip varchar(5) unique not null,
+    -> nama varchar(30) not null,
+    -> gender enum('Laki-Laki','Perempuan') not null,
+    -> tmp_lahir varchar(30) not null,
+    -> tgl_lahir date not null,
+    -> iddivisi int not null references divisi(id),
+    -> idjabatan int not null references jabatan(id),
+    -> alamat text
+    -> );
+Query OK, 0 rows affected (0.044 sec)
+
+8 .ampilkan deskripsi tabel pegawai 
+MariaDB [dbpegawai]> #Jawaban No 8
+MariaDB [dbpegawai]> desc pegawai
+    -> ;
++-----------+-------------------------------+------+-----+---------+----------------+
+| Field     | Type                          | Null | Key | Default | Extra          |
++-----------+-------------------------------+------+-----+---------+----------------+
+| id        | int(11)                       | NO   | PRI | NULL    | auto_increment |
+| nip       | varchar(5)                    | NO   | UNI | NULL    |                |
+| nama      | varchar(30)                   | NO   |     | NULL    |                |
+| gender    | enum('Laki-Laki','Perempuan') | NO   |     | NULL    |                |
+| tmp_lahir | varchar(30)                   | NO   |     | NULL    |                |
+| tgl_lahir | date                          | NO   |     | NULL    |                |
+| iddivisi  | int(11)                       | NO   |     | NULL    |                |
+| idjabatan | int(11)                       | NO   |     | NULL    |                |
+| alamat    | text                          | YES  |     | NULL    |                |
++-----------+-------------------------------+------+-----+---------+----------------+
+9 rows in set (0.014 sec)
+
+9.Tampilkan tabel-tabel yang ada di dbpegawai 
+MariaDB [dbpegawai]> #Jawaban No 9
+MariaDB [dbpegawai]> show tables;
++---------------------+
+| Tables_in_dbpegawai |
++---------------------+
+| divisi              |
+| jabatan             |
+| pegawai             |
++---------------------+
+3 rows in set (0.002 sec)
+
+10.Input data divisi => SDM, Keuangan, Marketing, IT
+MariaDB [dbpegawai]> #Jawaban No 10
+MariaDB [dbpegawai]> insert into divisi values
+    -> ('','SDM'),('','Keuangan'),('','Marketing'),('','IT');
+Query OK, 4 rows affected, 4 warnings (0.086 sec)
+Records: 4  Duplicates: 0  Warnings: 4
+
+11.Tampilkan seluruh data divisi 
+MariaDB [dbpegawai]> #Jawaban No 11
+MariaDB [dbpegawai]> select * from divisi;
++----+-----------+
+| id | nama      |
++----+-----------+
+|  4 | IT        |
+|  2 | Keuangan  |
+|  3 | Marketing |
+|  1 | SDM       |
++----+-----------+
+4 rows in set (0.001 sec)
+
+12.Input data jabatan => Direktur, Manajer, Asisten Manajer, Staff
+MariaDB [dbpegawai]> #Jawaban No 12
+MariaDB [dbpegawai]> insert into jabatan values
+    -> ('','Direktur'),('','Manajer'),('','Asisten Manajer'),('','Staff');
+Query OK, 4 rows affected, 4 warnings (0.013 sec)
+Records: 4  Duplicates: 0  Warnings: 4
+
+13.Tampilkan seluruh data jabatan 
+MariaDB [dbpegawai]> #Jawaban No 13
+MariaDB [dbpegawai]> select * from jabatan;
++----+-----------------+
+| id | nama            |
++----+-----------------+
+|  3 | Asisten Manajer |
+|  1 | Direktur        |
+|  2 | Manajer         |
+|  4 | Staff           |
++----+-----------------+
+4 rows in set (0.001 sec)
+
+
+14.Input 20 orang pegawai ( 1 divisi 5 orang, untuk gender dan jabatan diacak) 
+MariaDB [dbpegawai]> #Jawaban No 14
+
+MariaDB [dbpegawai]> insert into pegawai
+    -> (nip,nama,gender,tmp_lahir,tgl_lahir,iddivisi,idjabatan,alamat)values
+    -> (001,'Mutia Aulia Kalsum','perempuan','palembang',20050501,1,1,'Bogor'),
+    -> (002,'drina','perempuan','jakarta',19880305,1,2,'Tanggerang kota'),
+    -> (003,'Fahreza rey','Laki-Laki','jakarta',19850812,1,5,'Depok'),
+    -> (004,'Bintang','Laki-Laki','Bengkulu',19831125,1,4,'Jakarta'),
+    -> (005,'Alisya','Perempuan','Tanggrang',19790718,1,3,'Cisauk'),
+    -> (006,'Angga Santoso','Laki-Laki','Kalimantan',19890110,2,4,'Jakarta Barat'),
+    -> (007,'Desta Ananda','Laki-Laki','Bogor',20031215,2,3,'Cibinong'),
+    -> (008,'Fitri Azahra','Perempuan','Jakarta',20040616,2,5,'Bogor'),
+    -> (009,'Asep Saipudin','Laki-Laki','Bekasi',20040415,2,2,'Tanggerang'),
+    -> (010,'Muhammad Zaki','Laki-Laki','Cikarang',20040824,2,1,'Cibinong'),
+    -> (011,'Rafi Albar','Laki-Laki','Bogor',20050718,3,1,'Parung'),
+    -> (012,'Agung Gunawan','Laki-Laki','Bogor',20051012,3,2,'Ciseeng'),
+    -> (013,'Andi Alkafi','Laki-Laki','Jakarta',20001019,3,3,'Sawangan'),
+    -> (014,'Syadika','Laki-Laki','Jakarta',20001231,3,4,'Ciseeng'),
+    -> (015,'Aziz Hidayah','Laki-Laki','Jawa Tenggah',20001019,3,5,'Serpong'),
+    -> (016,'Azizah','Perempuan','Jawa Timur',20040425,4,5,'Sawangan'),
+    -> (017,'ajra Salsabila','Perempuan','Tanggerang',20040805,4,4,'BSD'),
+    -> (018,'Siti Rahmawati','Perempuan','Jakarta',19991125,4,3,'Cikarang'),
+    -> (019,'Tsabitah','Perempuan','Sulawesi',20011030,4,2,'Bogor'),
+    -> (020,'Naurah','Perempuan','Bekasi',1998,4,1,'Depok');
+Query OK, 20 rows affected, 1 warning (0.013 sec)
+Records: 20  Duplicates: 0  Warnings: 1
+
+
+15.Tampilkan seluruh data pegawai
+MariaDB [dbpegawai]> #Jawaban No 15
+MariaDB [dbpegawai]> select * from pegawai;
++----+-----+--------------------+-----------+--------------+------------+----------+-----------+-----------------+
+| id | nip | nama               | gender    | tmp_lahir    | tgl_lahir  | iddivisi | idjabatan | alamat          |
++----+-----+--------------------+-----------+--------------+------------+----------+-----------+-----------------+
+|  1 | 1   | Mutia Aulia Kalsum | Perempuan | palembang    | 2005-05-01 |        1 |         1 | Bogor           |
+|  2 | 2   | drina              | Perempuan | jakarta      | 1988-03-05 |        1 |         2 | Tanggerang kota |
+|  3 | 3   | Fahreza rey        | Laki-Laki | jakarta      | 1985-08-12 |        1 |         5 | Depok           |
+|  4 | 4   | Bintang            | Laki-Laki | Bengkulu     | 1983-11-18 |        1 |         4 | Jakarta         |
+|  5 | 5   | Alisya             | Perempuan | Tanggrang    | 1979-07-18 |        1 |         3 | Cisauk          |
+|  6 | 6   | Angga Santoso      | Laki-Laki | Kalimantan   | 1989-01-10 |        2 |         4 | Jakarta Barat   |
+|  7 | 7   | Desta Ananda       | Laki-Laki | Bogor        | 2003-12-15 |        2 |         3 | Cibinong        |
+|  8 | 8   | Fitri Azahra       | Perempuan | Jakarta      | 2004-06-16 |        2 |         5 | Bogor           |
+|  9 | 9   | Iqbal Assiya Tri   | Laki-Laki | Bekasi       | 2004-04-15 |        2 |         2 | Tanggerang      |
+| 10 | 10  | Muhammad Zaki      | Laki-Laki | Cikarang     | 2004-08-24 |        2 |         1 | Cibinong        |
+| 11 | 11  | Rafi Albar         | Laki-Laki | Bogor        | 2005-07-18 |        3 |         1 | Parung          |
+| 12 | 12  | Agung Gunawan      | Laki-Laki | Bogor        | 2005-10-12 |        3 |         2 | Ciseeng         |
+| 13 | 13  | Andi Alkafi        | Laki-Laki | Jakarta      | 2000-10-19 |        3 |         3 | Sawangan        |
+| 14 | 14  | Syadika            | Laki-Laki | Jakarta      | 2003-11-13 |        3 |         4 | Ciseeng         |
+| 15 | 15  | Aziz Hidayah       | Laki-Laki | Jawa Tenggah | 2000-10-19 |        3 |         5 | Serpong         |
+| 16 | 16  | Azizah             | perempuan | Jawa Timur   | 2005-04-27 |        4 |         5 | Sawangan        |
+| 17 | 17  | Ajra Salsabila     | perempuan | Tanggerang   | 2004-08-05 |        4 |         4 | BSD             |
+| 18 | 18  | Siti Rahmawati     | perempuan | Jakarta      | 1999-11-25 |        4 |         3 | Cikarang        |
+| 19 | 19  | Tsabitah           | Perempuan | Sulawesi     | 2001-10-30 |        4 |         2 | Bogor           |
+| 20 | 20  | Naurah             | Perempuan | Bekasi       | 0000-00-00 |        4 |         1 | Depok           |
++----+-----+--------------------+-----------+--------------+------------+----------+-----------+-----------------+
+20 rows in set (0.001 sec)
+
+
+16.Ubah data 5 orang pegawai (dengan ketentuan ubah 3 kolom(bebas)) 
+MariaDB [dbpegawai]> #Jawaban No 16
+MariaDB [dbpegawai]> update pegawai set alamat='Parung',idjabatan=3,tgl_lahir=20001231 where nip=14;
+Query OK, 1 row affected (0.085 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [dbpegawai]> update pegawai set alamat='Pamulang',idjabatan=4,tgl_lahir=19951231 where nip=13;
+Query OK, 1 row affected (0.009 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+ update pegawai set alamat='Bekasi',idjabatan=5,tgl_lahir=20070118 where nip=10;
+Query OK, 1 row affected (0.007 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [dbpegawai]> update pegawai set alamat='Pamulang',idjabatan=1,tgl_lahir=19960913 where nip=8;
+Query OK, 1 row affected (0.008 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [dbpegawai]> update pegawai set alamat='Parung',idjabatan=4,tgl_lahir=20040425 where nip=16;
+Query OK, 1 row affected (0.008 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [dbpegawai]> select * from pegawai;
++----+-----+--------------------+-----------+--------------+------------+----------+-----------+-----------------+
+| id | nip | nama               | gender    | tmp_lahir    | tgl_lahir  | iddivisi | idjabatan | alamat          |
++----+-----+--------------------+-----------+--------------+------------+----------+-----------+-----------------+
+|  1 | 1   | Mutia Aulia Kalsum | Perempuan | palembang    | 2005-05-01 |        1 |         1 | Bogor           |
+|  2 | 2   | drina              | Perempuan | jakarta      | 1988-03-05 |        1 |         2 | Tanggerang kota |
+|  3 | 3   | Fahreza rey        | Laki-Laki | jakarta      | 1985-08-12 |        1 |         5 | Depok           |
+|  4 | 4   | Bintang            | Laki-Laki | Bengkulu     | 1983-11-25 |        1 |         4 | Jakarta         |
+|  5 | 5   | Alisya             | Perempuan | Tanggrang    | 1979-07-18 |        1 |         3 | Cisauk          |
+|  6 | 6   | Angga Santoso      | Laki-Laki | Kalimantan   | 1989-01-10 |        2 |         4 | Jakarta Barat   |
+|  7 | 7   | Desta Ananda       | Laki-Laki | Bogor        | 2003-12-15 |        2 |         3 | Cibinong        |
+|  8 | 8   | Fitri Azahra       | Perempuan | Jakarta      | 1996-09-13 |        2 |         1 | Pamulang        |
+|  9 | 9   | Iqbal Assiya Tri   | Laki-Laki | Bekasi       | 2004-04-15 |        2 |         2 | Tanggerang      |
+| 10 | 10  | Muhammad Zaki      | Laki-Laki | Cikarang     | 2007-01-18 |        2 |         5 | Bekasi          |
+| 11 | 11  | Rafi Albar         | Laki-Laki | Bogor        | 2005-07-18 |        3 |         1 | Parung          |
+| 12 | 12  | Agung Gunawan      | Laki-Laki | Bogor        | 2005-10-12 |        3 |         2 | Ciseeng         |
+| 13 | 13  | Andi Alkafi        | Laki-Laki | Jakarta      | 1995-12-31 |        3 |         4 | Pamulang        |
+| 14 | 14  | Syadika            | Laki-Laki | Jakarta      | 2000-12-31 |        3 |         3 | Parung          |
+| 15 | 15  | Aziz Hidayah       | Laki-Laki | Jawa Tenggah | 2000-10-19 |        3 |         5 | Serpong         |
+| 16 | 16  | Azizah             | perempuan | Jawa Timur   | 2004-04-25 |        4 |         4 | Parung          |
+| 17 | 17  | Ajra Salsabila     | perempuan | Tanggerang   | 2004-08-05 |        4 |         4 | BSD             |
+| 18 | 18  | Siti Rahmawati     | perempuan | Jakarta      | 1999-11-25 |        4 |         3 | Cikarang        |
+| 19 | 19  | Tsabitah           | Perempuan | Sulawesi     | 2001-10-30 |        4 |         2 | Bogor           |
+| 20 | 20  | Naurah             | Perempuan | Bekasi       | 0000-00-00 |        4 |         1 | Depok           |
++----+-----+--------------------+-----------+--------------+------------+----------+-----------+-----------------+
+20 rows in set (0.002 sec)
+
+
+17.Hapus 2 orang pegawai pegawai terakhir
+MariaDB [dbpegawai]> #Jawaban No 17
+MariaDB [dbpegawai]> delete from pegawai where nip=19;
+Query OK, 1 row affected (0.007 sec)
+
+MariaDB [dbpegawai]> delete from pegawai where nip=20;
+Query OK, 1 row affected (0.006 sec)
+
+MariaDB [dbpegawai]> select * from pegawai;
++----+-----+--------------------+-----------+--------------+------------+----------+-----------+-----------------+
+| id | nip | nama               | gender    | tmp_lahir    | tgl_lahir  | iddivisi | idjabatan | alamat          |
++----+-----+--------------------+-----------+--------------+------------+----------+-----------+-----------------+
+|  1 | 1   | Mutia Aulia Kalsum | Perempuan | palembang    | 2005-05-01 |        1 |         1 | Bogor           |
+|  2 | 2   | drina              | Perempuan | jakarta      | 1988-03-05 |        1 |         2 | Tanggerang kota |
+|  3 | 3   | Fahreza rey        | Laki-Laki | jakarta      | 1985-08-12 |        1 |         5 | Depok           |
+|  4 | 4   | Bintang            | Laki-Laki | Bengkulu     | 1983-11-25 |        1 |         4 | Jakarta         |
+|  5 | 5   | Alisya             | Perempuan | Tanggrang    | 1979-07-18 |        1 |         3 | Cisauk          |
+|  6 | 6   | Angga Santoso      | Laki-Laki | Kalimantan   | 1989-01-10 |        2 |         4 | Jakarta Barat   |
+|  7 | 7   | Desta Ananda       | Laki-Laki | Bogor        | 2003-12-15 |        2 |         3 | Cibinong        |
+|  8 | 8   | Fitri Azahra       | Perempuan | Jakarta      | 1996-09-13 |        2 |         1 | Pamulang        |
+|  9 | 9   | Iqbal Assiya Tri   | Laki-Laki | Bekasi       | 2004-04-15 |        2 |         2 | Tanggerang      |
+| 10 | 10  | Muhammad Zaki      | Laki-Laki | Cikarang     | 2007-01-18 |        2 |         5 | Bekasi          |
+| 11 | 11  | Rafi Albar         | Laki-Laki | Bogor        | 2005-07-18 |        3 |         1 | Parung          |
+| 12 | 12  | Agung Gunawan      | Laki-Laki | Bogor        | 2005-10-12 |        3 |         2 | Ciseeng         |
+| 13 | 13  | Andi Alkafi        | Laki-Laki | Jakarta      | 1995-12-31 |        3 |         4 | Pamulang        |
+| 14 | 14  | Syadika            | Laki-Laki | Jakarta      | 2000-12-31 |        3 |         3 | Parung          |
+| 15 | 15  | Aziz Hidayah       | Laki-Laki | Jawa Tenggah | 2000-10-19 |        3 |         5 | Serpong         |
+| 16 | 16  | Azizah             | Perempuan | Jawa Timur   | 2004-04-25 |        4 |         4 | Parung          |
+| 17 | 17  | Ajra Salsabila     | Perempuan | Tanggerang   | 2004-08-05 |        4 |         4 | BSD             |
+| 18 | 18  | Siti Rahmawati     | Perempuan | Jakarta      | 1999-11-25 |        4 |         3 | Cikarang        |
++----+-----+--------------------+-----------+--------------+------------+----------+-----------+-----------------+
+18 rows in set (0.002 sec)
+
+
+18.Gunakan alter tabel pada tabel pegawai untuk menambahkan kolom baru berat_badan dengan
+tipe data float wajib diisi, lalu input berat badan semua pegawai secara acak 
+MariaDB [dbpegawai]> #Jawaban No 18
+MariaDB [dbpegawai]> alter table pegawai add column berat_badan float not null;
+Query OK, 0 rows affected (0.019 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [dbpegawai]> update pegawai set berat_badan=50 where nip=1;
+Query OK, 1 row affected (0.006 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+
+MariaDB [dbpegawai]> select * from pegawai;
++----+-----+--------------------+-----------+--------------+------------+----------+-----------+-----------------+-------------+
+| id | nip | nama               | gender    | tmp_lahir    | tgl_lahir  | iddivisi | idjabatan | alamat          | berat_badan |
++----+-----+--------------------+-----------+--------------+------------+----------+-----------+-----------------+-------------+
+|  1 | 1   | Mutia Aulia Kalsum | Perempuan | palembang    | 2005-05-01 |        1 |         1 | Bogor           |          50 |
+|  2 | 2   | drina              | Perempuan | jakarta      | 1988-03-05 |        1 |         2 | Tanggerang kota |          48 |
+|  3 | 3   | Fahreza rey        | Laki-Laki | jakarta      | 1985-08-12 |        1 |         5 | Depok           |          51 |
+|  4 | 4   | Bintang            | Laki-Laki | Bengkulu     | 1983-11-25 |        1 |         4 | Jakarta         |          53 |
+|  5 | 5   | Alisya             | Perempuan | Tanggrang    | 1979-07-18 |        1 |         3 | Cisauk          |          50 |
+|  6 | 6   | Angga Santoso      | Laki-Laki | Kalimantan   | 1989-01-10 |        2 |         4 | Jakarta Barat   |          50 |
+|  7 | 7   | Desta Ananda       | Laki-Laki | Bogor        | 2003-12-15 |        2 |         3 | Cibinong        |          51 |
+|  8 | 8   | Fitri Azahra       | Perempuan | Jakarta      | 1996-09-13 |        2 |         1 | Pamulang        |          49 |
+|  9 | 9   | Iqbal Assiya Tri   | Laki-Laki | Bekasi       | 2004-04-15 |        2 |         2 | Tanggerang      |          55 |
+| 10 | 10  | Muhammad Zaki      | Laki-Laki | Cikarang     | 2007-01-18 |        2 |         5 | Bekasi          |          52 |
+| 11 | 11  | Rafi Albar         | Laki-Laki | Bogor        | 2005-07-18 |        3 |         1 | Parung          |          50 |
+| 12 | 12  | Agung Gunawan      | Laki-Laki | Bogor        | 2005-10-12 |        3 |         2 | Ciseeng         |          56 |
+| 13 | 13  | Andi Alkafi        | Laki-Laki | Jakarta      | 1995-12-31 |        3 |         4 | Pamulang        |          51 |
+| 14 | 14  | Syadika            | Laki-Laki | Jakarta      | 2000-12-31 |        3 |         3 | Parung          |          51 |
+| 15 | 15  | Aziz Hidayah       | Laki-Laki | Jawa Tenggah | 2000-10-19 |        3 |         5 | Serpong         |          58 |
+| 16 | 16  | Azizah             | Perempuan | Jawa Timur   | 2004-04-25 |        4 |         4 | Parung          |          54 |
+| 17 | 17  | Ajra Salsabila     | Perempuan | Tanggerang   | 2004-08-05 |        4 |         4 | BSD             |          53 |
+| 18 | 18  | Siti Rahmawati     | Perempuan | Jakarta      | 1999-11-25 |        4 |         3 | Cikarang        |          51 |
++----+-----+--------------------+-----------+--------------+------------+----------+-----------+-----------------+-------------+
+18 rows in set (0.002 sec)
+
+
+19.Gunakan alter tabel pada tabel pegawai untuk menambahkan kolom baru umur dengan tipe data
+integer wajib diisi, lalu input umur semua pegawai secara acak
+MariaDB [dbpegawai]> #Jawaban No 19
+MariaDB [dbpegawai]> alter table pegawai add column umur int not null;
+Query OK, 0 rows affected (0.019 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [dbpegawai]> update pegawai set umur=18 where nip=1;
+Query OK, 1 row affected (0.007 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [dbpegawai]> select * from pegawai;
++----+-----+--------------------+-----------+--------------+------------+----------+-----------+-----------------+-------------+------+
+| id | nip | nama               | gender    | tmp_lahir    | tgl_lahir  | iddivisi | idjabatan | alamat          | berat_badan | umur |
++----+-----+--------------------+-----------+--------------+------------+----------+-----------+-----------------+-------------+------+
+|  1 | 1   | Mutia Aulia Kalsum | Perempuan | palembang    | 2005-05-01 |        1 |         1 | Bogor           |          50 |   18 |
+|  2 | 2   | drina              | Perempuan | jakarta      | 1988-03-05 |        1 |         2 | Tanggerang kota |          48 |   36 |
+|  3 | 3   | Fahreza rey        | Laki-Laki | jakarta      | 1985-08-12 |        1 |         5 | Depok           |          51 |   37 |
+|  4 | 4   | Bintang            | Laki-Laki | Bengkulu     | 1983-11-25 |        1 |         4 | Jakarta         |          53 |   40 |
+|  5 | 5   | Alisya             | Perempuan | Tanggrang    | 1979-07-18 |        1 |         3 | Cisauk          |          50 |   44 |
+|  6 | 6   | Angga Santoso      | Laki-Laki | Kalimantan   | 1989-01-10 |        2 |         4 | Jakarta Barat   |          50 |   35 |
+|  7 | 7   | Desta Ananda       | Laki-Laki | Bogor        | 2003-12-15 |        2 |         3 | Cibinong        |          51 |   22 |
+|  8 | 8   | Fitri Azahra       | Perempuan | Jakarta      | 1996-09-13 |        2 |         1 | Pamulang        |          49 |   24 |
+|  9 | 9   | Iqbal Assiya Tri   | Laki-Laki | Bekasi       | 2004-04-15 |        2 |         2 | Tanggerang      |          55 |   17 |
+| 10 | 10  | Muhammad Zaki      | Laki-Laki | Cikarang     | 2007-01-18 |        2 |         5 | Bekasi          |          52 |   16 |
+| 11 | 11  | Rafi Albar         | Laki-Laki | Bogor        | 2005-07-18 |        3 |         1 | Parung          |          50 |   17 |
+| 12 | 12  | Agung Gunawan      | Laki-Laki | Bogor        | 2005-10-12 |        3 |         2 | Ciseeng         |          56 |   18 |
+| 13 | 13  | Andi Alkafi        | Laki-Laki | Jakarta      | 1995-12-31 |        3 |         4 | Pamulang        |          51 |   25 |
+| 14 | 14  | Syadika            | Laki-Laki | Jakarta      | 2000-12-31 |        3 |         3 | Parung          |          51 |   27 |
+| 15 | 15  | Aziz Hidayah       | Laki-Laki | Jawa Tenggah | 2000-10-19 |        3 |         5 | Serpong         |          58 |   27 |
+| 16 | 16  | Azahra             | Perempuan | Jawa Timur   | 2004-04-25 |        4 |         4 | Parung          |          54 |   25 |
+| 17 | 17  | Ajra Salsabila     | Perempuan | Tanggerang   | 2004-08-05 |        4 |         4 | BSD             |          53 |   16 |
+| 18 | 18  | Siti Rahmawati     | Perempuan | Jakarta      | 1999-11-25 |        4 |         3 | Cikarang        |          51 |   28 |
++----+-----+--------------------+-----------+--------------+------------+----------+-----------+-----------------+-------------+------+
+18 rows in set (0.001 sec)
+
+
+
+20.Gunakan alter tabel pada tabel pegawai untuk mengubah nama kolom gender menjadi
+jenis_kelamin 
+MariaDB [dbpegawai]> #Jawaban No 20
+MariaDB [dbpegawai]> alter table pegawai change gender jenis_kelamin enum('Laki-Laki','Perempuan');
+Query OK, 0 rows affected (0.126 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+
+21.Tampilkan kolom2 tertentu di tabel pegawai (nip,nama,jenis_kelamin,alamat) 
+MariaDB [dbpegawai]> #Jawaban No 21
+MariaDB [dbpegawai]> select nip,nama,jenis_kelamin,alamat from pegawai;
++-----+--------------------+---------------+-----------------+
+| nip | nama               | jenis_kelamin | alamat          |
++-----+--------------------+---------------+-----------------+
+| 1   | Mutia Aulia Kalsum | Perempuan     | Bogor           |
+| 2   | drina              | Perempuan     | Tanggerang kota |
+| 3   | Fahreza rey        | Laki-Laki     | Depok           |
+| 4   | Bintang            | Laki-Laki     | Jakarta         |
+| 5   | Alisya             | Perempuan     | Cisauk          |
+| 6   | Angga Santoso      | Laki-Laki     | Jakarta Barat   |
+| 7   | Desta Ananda       | Laki-Laki     | Cibinong        |
+| 8   | Fitri Azahra       | Perempuan     | Pamulang        |
+| 9   | Asep saipudin      | Laki-Laki     | Tanggerang      |
+| 10  | Muhammad Zaki      | Laki-Laki     | Bekasi          |
+| 11  | Rafi Albar         | Laki-Laki     | Parung          |
+| 12  | Agung Gunawan      | Laki-Laki     | Ciseeng         |
+| 13  | Andi Alkafi        | Laki-Laki     | Pamulang        |
+| 14  | Syadika            | Laki-Laki     | Parung          |
+| 15  | Aziz Hidayah       | Laki-Laki     | Serpong         |
+| 16  | Azizah             | Perempuan     | Parung          |
+| 17  | Ajra salsabila     | Perempuan     | BSD             |
+| 18  | Siti Rahmawati     | Perempuan     | Cikarang        |
++-----+--------------------+---------------+-----------------+
+18 rows in set (0.001 sec)
+
+
+
+22.Tampilkan baris2 tertentu di tabel pegawai (yang gendernya laki2 saja) 
+MariaDB [dbpegawai]> #Jawaban No 22
+MariaDB [dbpegawai]> select nama,jenis_kelamin from pegawai where jenis_kelamin='Laki-Laki';
++---------------+---------------+
+| nama          | jenis_kelamin |
++---------------+---------------+
+| Fahreza rey   | Laki-Laki     |
+| Bintang       | Laki-Laki     |
+| Angga Santoso | Laki-Laki     |
+| Desta Ananda  | Laki-Laki     |
+| Asep saipudin | Laki-Laki     |
+| Muhammad Zaki | Laki-Laki     |
+| Rafi Albar    | Laki-Laki     |
+| Agung Gunawan | Laki-Laki     |
+| Andi Alkafi   | Laki-Laki     |
+| Syadika       | Laki-Laki     |
+| Aziz Hidayah  | Laki-Laki     |
++---------------+---------------+
+11 rows in set (0.001 sec)
+
+
+
+23.Tampilkan baris2 tertentu di tabel pegawai (yang bekerja di divisi IT dan gendernya perempuan) 
+MariaDB [dbpegawai]> #Jawaban No 23
+MariaDB [dbpegawai]> select nama,iddivisi,jenis_kelamin from pegawai where iddivisi=4 and jenis_kelamin='Perempuan';
++----------------+----------+---------------+
+| nama           | iddivisi | jenis_kelamin |
++----------------+----------+---------------+
+| Azizah         |        4 | Perempuan     |
+| Ajra salsabila |        4 | Perempuan     |
+| Siti Rahmawati |        4 | Perempuan     |
++----------------+----------+---------------+
+3 rows in set (0.001 sec)
+
+
+24.Tampilkan data pegawai yang umurnya di atas 30 tahun dan lahirnya di kota jakarta dengan
+klausa WHERE, AND 
+MariaDB [dbpegawai]> #Jawaban No 24
+MariaDB [dbpegawai]> select * from pegawai where umur>30 and tmp_lahir='Jakarta';
++----+-----+-------------+---------------+-----------+------------+----------+-----------+-----------------+-------------+------+
+| id | nip | nama        | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat          | berat_badan | umur |
++----+-----+-------------+---------------+-----------+------------+----------+-----------+-----------------+-------------+------+
+|  2 | 2   | drina       | Perempuan     | jakarta   | 1988-03-05 |        1 |         2 | Tanggerang kota |          48 |   36 |
+|  3 | 3   | Fahreza rey | Laki-Laki     | jakarta   | 1985-08-12 |        1 |         5 | Depok           |          51 |   38 |
++----+-----+-------------+---------------+-----------+------------+----------+-----------+-----------------+-------------+------+
+2 rows in set (0.124 sec)
+
+
+
+25.Tampilkan data pegawai yang bekerja pada divisi marketing, berumur lebih dari 30 tahun dan
+berjenis kelamin perempuan dengan klausa WHERE, AND 
+MariaDB [dbpegawai]> #Jawaban No 25
+MariaDB [dbpegawai]> select * from pegawai where iddivisi=3 and umur>30 and jenis_kelamin='perempuan';
+Empty set (0.002 sec)
+
+
+26.Tampilkan data pegawai dengan klausa key (nip) 
+MariaDB [dbpegawai]> #Jawaban No 26
+MariaDB [dbpegawai]> select * from pegawai where nip=3;
++----+-----+-------------+---------------+-----------+------------+----------+-----------+--------+-------------+------+
+| id | nip | nama        | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat | berat_badan | umur |
++----+-----+-------------+---------------+-----------+------------+----------+-----------+--------+-------------+------+
+|  3 | 3   | Fahreza rey | Laki-Laki     | jakarta   | 1985-08-12 |        1 |         5 | Depok  |          51 |   38 |
++----+-----+-------------+---------------+-----------+------------+----------+-----------+--------+-------------+------+
+1 row in set (0.002 sec)
+
+
+27.Tampilkan data pegawai dengan klausa non key (gender) 
+MariaDB [dbpegawai]> #Jawaban No 27
+MariaDB [dbpegawai]> select * from pegawai where jenis_kelamin='Laki-Laki';
++----+-----+---------------+---------------+--------------+------------+----------+-----------+---------------+-------------+------+
+| id | nip | nama          | jenis_kelamin | tmp_lahir    | tgl_lahir  | iddivisi | idjabatan | alamat        | berat_badan | umur |
++----+-----+---------------+---------------+--------------+------------+----------+-----------+---------------+-------------+------+
+|  3 | 3   | Fahreza rey   | Laki-Laki     | jakarta      | 1985-08-12 |        1 |         5 | Depok         |          51 |   38 |
+|  4 | 4   | Bintang       | Laki-Laki     | Bengkulu     | 1983-11-25 |        1 |         4 | Jakarta       |          53 |   40 |
+|  6 | 6   | Angga Santoso | Laki-Laki     | Kalimantan   | 1989-01-10 |        2 |         4 | Jakarta Barat |          50 |   35 |
+|  7 | 7   | Desta Ananda  | Laki-Laki     | Bogor        | 2003-12-15 |        2 |         3 | Cibinong      |          51 |   22 |
+|  9 | 9   | Asep saipudin | Laki-Laki     | Bekasi       | 2004-04-15 |        2 |         2 | Tanggerang    |          55 |   17 |
+| 10 | 10  | Muhammad Zaki | Laki-Laki     | Cikarang     | 2007-01-18 |        2 |         5 | Bekasi        |          52 |   16 |
+| 11 | 11  | Rafi Albar    | Laki-Laki     | Bogor        | 2005-07-18 |        3 |         1 | Parung        |          50 |   17 |
+| 12 | 12  | Agung Gunawan | Laki-Laki     | Bogor        | 2005-10-12 |        3 |         2 | Ciseeng       |          56 |   18 |
+| 13 | 13  | Andi Alkafi   | Laki-Laki     | Jakarta      | 1995-12-31 |        3 |         4 | Pamulang      |          51 |   25 |
+| 14 | 14  | Syadika       | Laki-Laki     | Jakarta      | 2000-12-31 |        3 |         3 | Parung        |          51 |   27 |
+| 15 | 15  | Aziz Hidayah  | Laki-Laki     | Jawa Tenggah | 2000-10-19 |        3 |         5 | Serpong       |          58 |   27 |
++----+-----+---------------+---------------+--------------+------------+----------+-----------+---------------+-------------+------+
+11 rows in set (0.001 sec)
+
+
+28.Tampilkan data pegawai dengan klausa in (menyebutkan beberapa nip) 
+MariaDB [dbpegawai]> #Jawaban No 28
+MariaDB [dbpegawai]> select * from pegawai where nip in('3','15','18');
++----+-----+----------------+---------------+--------------+------------+----------+-----------+----------+-------------+------+
+| id | nip | nama           | jenis_kelamin | tmp_lahir    | tgl_lahir  | iddivisi | idjabatan | alamat   | berat_badan | umur |
++----+-----+----------------+---------------+--------------+------------+----------+-----------+----------+-------------+------+
+|  3 | 3   | Fahreza rey    | Laki-Laki     | jakarta      | 1985-08-12 |        1 |         5 | Depok    |          51 |   38 |
+| 15 | 15  | Aziz Hidayah   | Laki-Laki     | Jawa Tenggah | 2000-10-19 |        3 |         5 | Serpong  |          58 |   27 |
+| 18 | 18  | Siti Rahmawati | Perempuan     | Jakarta      | 1999-11-25 |        4 |         3 | Cikarang |          51 |   28 |
++----+-----+----------------+---------------+--------------+------------+----------+-----------+----------+-------------+------+
+3 rows in set (0.001 sec)
+
+
+
+29.Tampilkan data pegawai dengan klausa not in (menyebutkan beberapa tempat lahir)
+MariaDB [dbpegawai]> #Jawaban No 29
+MariaDB [dbpegawai]> select * from pegawai where tmp_lahir not in ('jakarta','bogor');
++----+-----+--------------------+---------------+--------------+------------+----------+-----------+---------------+-------------+------+
+| id | nip | nama               | jenis_kelamin | tmp_lahir    | tgl_lahir  | iddivisi | idjabatan | alamat        | berat_badan | umur |
++----+-----+--------------------+---------------+--------------+------------+----------+-----------+---------------+-------------+------+
+|  1 | 1   | Mutia Aulia Kalsum | Perempuan     | palembang    | 2005-05-01 |        1 |         1 | Bogor         |          50 |   18 |
+|  4 | 4   | Bintang            | Laki-Laki     | Bengkulu     | 1983-11-25 |        1 |         4 | Jakarta       |          53 |   40 |
+|  5 | 5   | Alisya             | Perempuan     | Tanggrang    | 1979-07-18 |        1 |         3 | Cisauk        |          50 |   44 |
+|  6 | 6   | Angga Santoso      | Laki-Laki     | Kalimantan   | 1989-01-10 |        2 |         4 | Jakarta Barat |          50 |   35 |
+|  9 | 9   | Asep saipudin      | Laki-Laki     | Bekasi       | 2004-04-15 |        2 |         2 | Tanggerang    |          55 |   17 |
+| 10 | 10  | Muhammad Zaki      | Laki-Laki     | Cikarang     | 2007-01-18 |        2 |         5 | Bekasi        |          52 |   16 |
+| 15 | 15  | Aziz Hidayah       | Laki-Laki     | Jawa Tenggah | 2000-10-19 |        3 |         5 | Serpong       |          58 |   27 |
+| 16 | 16  | Azizah             | Perempuan     | Jawa Timur   | 2004-04-25 |        4 |         4 | Parung        |          54 |   25 |
+| 17 | 17  | Ajra salsabila     | Perempuan     | Tanggerang   | 2004-08-05 |        4 |         4 | BSD           |          53 |   16 |
++----+-----+--------------------+---------------+--------------+------------+----------+-----------+---------------+-------------+------+
+9 rows in set (0.001 sec)
+
+
+30.Tampilkan data pegawai berdasarkan nama secara ascending 
+MariaDB [dbpegawai]> #Jawaban No 30
+MariaDB [dbpegawai]> select * from pegawai order by nama asc;
++----+-----+--------------------+---------------+--------------+------------+----------+-----------+-----------------+-------------+------+
+| id | nip | nama               | jenis_kelamin | tmp_lahir    | tgl_lahir  | iddivisi | idjabatan | alamat          | berat_badan | umur |
++----+-----+--------------------+---------------+--------------+------------+----------+-----------+-----------------+-------------+------+
+| 12 | 12  | Agung Gunawan      | Laki-Laki     | Bogor        | 2005-10-12 |        3 |         2 | Ciseeng         |          56 |   18 |
+| 17 | 17  | Ajra salsabila     | Perempuan     | Tanggerang   | 2004-08-05 |        4 |         4 | BSD             |          53 |   16 |
+|  5 | 5   | Alisya             | Perempuan     | Tanggrang    | 1979-07-18 |        1 |         3 | Cisauk          |          50 |   44 |
+| 13 | 13  | Andi Alkafi        | Laki-Laki     | Jakarta      | 1995-12-31 |        3 |         4 | Pamulang        |          51 |   25 |
+|  6 | 6   | Angga Santoso      | Laki-Laki     | Kalimantan   | 1989-01-10 |        2 |         4 | Jakarta Barat   |          50 |   35 |
+|  9 | 9   | Asep saipudin      | Laki-Laki     | Bekasi       | 2004-04-15 |        2 |         2 | Tanggerang      |          55 |   17 |
+| 15 | 15  | Aziz Hidayah       | Laki-Laki     | Jawa Tenggah | 2000-10-19 |        3 |         5 | Serpong         |          58 |   27 |
+| 16 | 16  | Azizah             | Perempuan     | Jawa Timur   | 2004-04-25 |        4 |         4 | Parung          |          54 |   25 |
+|  4 | 4   | Bintang            | Laki-Laki     | Bengkulu     | 1983-11-25 |        1 |         4 | Jakarta         |          53 |   40 |
+|  7 | 7   | Desta Ananda       | Laki-Laki     | Bogor        | 2003-12-15 |        2 |         3 | Cibinong        |          51 |   22 |
+|  2 | 2   | drina              | Perempuan     | jakarta      | 1988-03-05 |        1 |         2 | Tanggerang kota |          48 |   36 |
+|  3 | 3   | Fahreza rey        | Laki-Laki     | jakarta      | 1985-08-12 |        1 |         5 | Depok           |          51 |   38 |
+|  8 | 8   | Fitri Azahra       | Perempuan     | Jakarta      | 1996-09-13 |        2 |         1 | Pamulang        |          49 |   24 |
+| 10 | 10  | Muhammad Zaki      | Laki-Laki     | Cikarang     | 2007-01-18 |        2 |         5 | Bekasi          |          52 |   16 |
+|  1 | 1   | Mutia Aulia Kalsum | Perempuan     | palembang    | 2005-05-01 |        1 |         1 | Bogor           |          50 |   18 |
+| 11 | 11  | Rafi Albar         | Laki-Laki     | Bogor        | 2005-07-18 |        3 |         1 | Parung          |          50 |   17 |
+| 18 | 18  | Siti Rahmawati     | Perempuan     | Jakarta      | 1999-11-25 |        4 |         3 | Cikarang        |          51 |   28 |
+| 14 | 14  | Syadika            | Laki-Laki     | Jakarta      | 2000-12-31 |        3 |         3 | Parung          |          51 |   27 |
++----+-----+--------------------+---------------+--------------+------------+----------+-----------+-----------------+-------------+------+
+18 rows in set (0.001 sec)
+
+
+
+31.Tampilkan data pegawai dari yang berat badan paling gemuk ke paling kurus 
+MariaDB [dbpegawai]> #Jawaban No 31
+MariaDB [dbpegawai]> select * from pegawai order by Berat_badan desc;
++----+-----+--------------------+---------------+--------------+------------+----------+-----------+-----------------+-------------+------+
+| id | nip | nama               | jenis_kelamin | tmp_lahir    | tgl_lahir  | iddivisi | idjabatan | alamat          | berat_badan | umur |
++----+-----+--------------------+---------------+--------------+------------+----------+-----------+-----------------+-------------+------+
+| 15 | 15  | Aziz Hidayah       | Laki-Laki     | Jawa Tenggah | 2000-10-19 |        3 |         5 | Serpong         |          58 |   27 |
+| 12 | 12  | Agung Gunawan      | Laki-Laki     | Bogor        | 2005-10-12 |        3 |         2 | Ciseeng         |          56 |   18 |
+|  9 | 9   | Asep saipudin      | Laki-Laki     | Bekasi       | 2004-04-15 |        2 |         2 | Tanggerang      |          55 |   17 |
+| 16 | 16  | Azizah             | Perempuan     | Jawa Timur   | 2004-04-25 |        4 |         4 | Parung          |          54 |   25 |
+|  4 | 4   | Bintang            | Laki-Laki     | Bengkulu     | 1983-11-25 |        1 |         4 | Jakarta         |          53 |   40 |
+| 17 | 17  | Ajra salsabila     | Perempuan     | Tanggerang   | 2004-08-05 |        4 |         4 | BSD             |          53 |   16 |
+| 10 | 10  | Muhammad Zaki      | Laki-Laki     | Cikarang     | 2007-01-18 |        2 |         5 | Bekasi          |          52 |   16 |
+|  3 | 3   | Fahreza rey        | Laki-Laki     | jakarta      | 1985-08-12 |        1 |         5 | Depok           |          51 |   38 |
+|  7 | 7   | Desta Ananda       | Laki-Laki     | Bogor        | 2003-12-15 |        2 |         3 | Cibinong        |          51 |   22 |
+| 13 | 13  | Andi Alkafi        | Laki-Laki     | Jakarta      | 1995-12-31 |        3 |         4 | Pamulang        |          51 |   25 |
+| 14 | 14  | Syadika            | Laki-Laki     | Jakarta      | 2000-12-31 |        3 |         3 | Parung          |          51 |   27 |
+| 18 | 18  | Siti Rahmawati     | Perempuan     | Jakarta      | 1999-11-25 |        4 |         3 | Cikarang        |          51 |   28 |
+|  1 | 1   | Mutia Aulia Kalsum | Perempuan     | palembang    | 2005-05-01 |        1 |         1 | Bogor           |          50 |   18 |
+|  5 | 5   | Alisya             | Perempuan     | Tanggrang    | 1979-07-18 |        1 |         3 | Cisauk          |          50 |   44 |
+|  6 | 6   | Angga Santoso      | Laki-Laki     | Kalimantan   | 1989-01-10 |        2 |         4 | Jakarta Barat   |          50 |   35 |
+| 11 | 11  | Rafi Albar         | Laki-Laki     | Bogor        | 2005-07-18 |        3 |         1 | Parung          |          50 |   17 |
+|  8 | 8   | Fitri Azahra       | Perempuan     | Jakarta      | 1996-09-13 |        2 |         1 | Pamulang        |          49 |   24 |
+|  2 | 2   | drina              | Perempuan     | jakarta      | 1988-03-05 |        1 |         2 | Tanggerang kota |          48 |   36 |
++----+-----+--------------------+---------------+--------------+------------+----------+-----------+-----------------+-------------+------+
+18 rows in set (0.001 sec)
+
+
+
+32.Tampilkan data 5 pegawai teratas gunakan klausa limit 
+MariaDB [dbpegawai]> #Jawaban No 32
+MariaDB [dbpegawai]> select * from pegawai limit 5;
++----+-----+--------------------+---------------+-----------+------------+----------+-----------+-----------------+-------------+------+
+| id | nip | nama               | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat          | berat_badan | umur |
++----+-----+--------------------+---------------+-----------+------------+----------+-----------+-----------------+-------------+------+
+|  1 | 1   | Mutia Aulia Kalsum | Perempuan     | palembang | 2005-05-01 |        1 |         1 | Bogor           |          50 |   18 |
+|  2 | 2   | drina              | Perempuan     | jakarta   | 1988-03-05 |        1 |         2 | Tanggerang kota |          48 |   36 |
+|  3 | 3   | Fahreza rey        | Laki-Laki     | jakarta   | 1985-08-12 |        1 |         5 | Depok           |          51 |   38 |
+|  4 | 4   | Bintang            | Laki-Laki     | Bengkulu  | 1983-11-25 |        1 |         4 | Jakarta         |          53 |   40 |
+|  5 | 5   | Alisya             | Perempuan     | Tanggrang | 1979-07-18 |        1 |         3 | Cisauk          |          50 |   44 |
++----+-----+--------------------+---------------+-----------+------------+----------+-----------+-----------------+-------------+------+
+5 rows in set (0.001 sec)
+
+
+
+33.Tampilkan data 5 pegawai terbawah gunakan klausa limit offset 
+MariaDB [dbpegawai]> #Jawaban No 33
+MariaDB [dbpegawai]> select * from pegawai limit 5 offset 13;
++----+-----+----------------+---------------+--------------+------------+----------+-----------+----------+-------------+------+
+| id | nip | nama           | jenis_kelamin | tmp_lahir    | tgl_lahir  | iddivisi | idjabatan | alamat   | berat_badan | umur |
++----+-----+----------------+---------------+--------------+------------+----------+-----------+----------+-------------+------+
+| 14 | 14  | Syadika        | Laki-Laki     | Jakarta      | 2000-12-31 |        3 |         3 | Parung   |          51 |   27 |
+| 15 | 15  | Aziz Hidayah   | Laki-Laki     | Jawa Tenggah | 2000-10-19 |        3 |         5 | Serpong  |          58 |   27 |
+| 16 | 16  | Azizah         | Perempuan     | Jawa Timur   | 2004-04-25 |        4 |         4 | Parung   |          54 |   25 |
+| 17 | 17  | Ajra salsabila | Perempuan     | Tanggerang   | 2004-08-05 |        4 |         4 | BSD      |          53 |   16 |
+| 18 | 18  | Siti Rahmawati | Perempuan     | Jakarta      | 1999-11-25 |        4 |         3 | Cikarang |          51 |   28 |
++----+-----+----------------+---------------+--------------+------------+----------+-----------+----------+-------------+------+
+5 rows in set (0.001 sec)
+
+
+
+
+34.Tampilkan jumlah pegawai gunakan fungsi aggregrat count
+MariaDB [dbpegawai]> #Jawaban No 34
+MariaDB [dbpegawai]> select count(*) as jumlah_pegawai from pegawai;
++----------------+
+| jumlah_pegawai |
++----------------+
+|             18 |
++----------------+
+1 row in set (0.002 sec)
+
+
+
+35.Tampilkan nip,nama pegawai, umur yg paling tua gunakan fungsi aggregrat max (kombinasi
+dengan sub query)
+MariaDB [dbpegawai]> #Jawaban No 35
+MariaDB [dbpegawai]> select nip,nama,umur from pegawai
+    -> where umur=(select max(umur) from pegawai);
++-----+--------+------+
+| nip | nama   | umur |
++-----+--------+------+
+| 5   | Alisya |   44 |
++-----+--------+------+
+1 row in set (0.002 sec)
+
+
+36.Tampilkan nip,nama pegawai, berat_badan yg paling kurus gunakan fungsi aggregrat min
+(kombinasi dengan sub query)
+MariaDB [dbpegawai]> #Jawaban No 36
+MariaDB [dbpegawai]> select nip,nama,berat_badan from pegawai
+    -> where berat_badan=(select min(berat_badan)from pegawai);
++-----+-------+-------------+
+| nip | nama  | berat_badan |
++-----+-------+-------------+
+| 2   | drina |          48 |
++-----+-------+-------------+
+1 row in set (0.002 sec)
+
+
+37.Tampilkan data rata2 umur pegawai gunakan fungsi aggregrat avg 
+MariaDB [dbpegawai]> #Jawaban No 37
+MariaDB [dbpegawai]> select avg(umur) as umur_rata2 from pegawai;
++------------+
+| umur_rata2 |
++------------+
+|    26.2778 |
++------------+
+1 row in set (0.001 sec)
+
+
+38.Tampilkan jumlah data pegawai yang laki2 dan berumur lebih dari 40 tahun dan berjabatan
+Manajer, gunakan fungsi aggregrat count dan klausa AND 
+MariaDB [dbpegawai]> #Jawaban No 38
+MariaDB [dbpegawai]> select count(*) as jumlah_pegawai_manager from pegawai where jenis_kelamin='Laki-Laki' and umur>40 and idjabatan=2;
++------------------------+
+| jumlah_pegawai_manager |
++------------------------+
+|                      0 |
++------------------------+
+1 row in set (0.002 sec)
+
+
+
+39.Tampilkan jumlah data pegawai yang perempuan dan berumur kurang dari 40 tahun dan
+berjabatan Staff, gunakan fungsi aggregrat count dan klausa AND
+MariaDB [dbpegawai]> #Jawaban No 39
+MariaDB [dbpegawai]> select count(*) as jumlah_pegawai_staff from pegawai where jenis_kelamin='Perempuan' and umur>40 and idjabatan=4;
++----------------------+
+| jumlah_pegawai_staff |
++----------------------+
+|                    0 |
++----------------------+
+1 row in set (0.001 sec)
+
+
+40.Tampilkan jumlah data pegawai yang perempuan gunakan fungsi aggregrat count 
+MariaDB [dbpegawai]> #Jawaban No 40
+MariaDB [dbpegawai]> select count(*) as jumlah_pegawai_perempuan from pegawai where jenis_kelamin='Perempuan';
++--------------------------+
+| jumlah_pegawai_perempuan |
++--------------------------+
+|                        7 |
++--------------------------+
+1 row in set (0.002 sec)
+
+41.Tampilkan jumlah pegawai yang bekerja di divisi SDM dengan fungsi aggregrat sum dan klausa
+WHERE
+MariaDB [dbpegawai]> #Jawaban No 41
+MariaDB [dbpegawai]> select sum(1) as jumlah_pegawai_SDM from pegawai
+    -> where iddivisi=1;
++--------------------+
+| jumlah_pegawai_SDM |
++--------------------+
+|                  5 |
++--------------------+
+1 row in set (0.001 sec)
+
+
+42.Tampilkan jumlah pegawai berdasarkan divisi masing2 menggunakan fungsi aggregrat count
+dan klausa group by 
+MariaDB [dbpegawai]> #Jawaban No 42
+MariaDB [dbpegawai]> select iddivisi, count(*) as jumlah_pegawai from pegawai group by iddivisi;
++----------+----------------+
+| iddivisi | jumlah_pegawai |
++----------+----------------+
+|        1 |              5 |
+|        2 |              5 |
+|        3 |              5 |
+|        4 |              3 |
++----------+----------------+
+4 rows in set (0.001 sec)
+
+43.Tampilkan data jumlah pegawai berdasarkan gender, yg jumlah minimal 10 orang (gunakan
+group by dan having) 
+MariaDB [dbpegawai]> #Jawaban No 43
+MariaDB [dbpegawai]> select jenis_kelamin, count(*) as jumlah_pegawai from pegawai
+    -> group by jenis_kelamin having count(*)>=10;
++---------------+----------------+
+| jenis_kelamin | jumlah_pegawai |
++---------------+----------------+
+| Laki-Laki     |             11 |
++---------------+----------------+
+1 row in set (0.001 sec)
+
+
+44.Cari data pegawai yang berawalan kata Muhammad 
+MariaDB [dbpegawai]> #Jawaban No 44
+MariaDB [dbpegawai]> select nama from pegawai where nama like 'Muhammad%';
++---------------+
+| nama          |
++---------------+
+| Muhammad Zaki |
++---------------+
+1 row in set (0.001 sec)
+
+
+45.Cari data pegawai yang berakhiran kata Santoso 
+MariaDB [dbpegawai]> #Jawaban No 45
+MariaDB [dbpegawai]> select nama from pegawai where nama like '%santoso';
++---------------+
+| nama          |
++---------------+
+| Angga Santoso |
++---------------+
+1 row in set (0.001 sec)
+
+46.Cari data pegawai yang mengadung kata Asep 
+MariaDB [dbpegawai]> #Jawaban No 46
+MariaDB [dbpegawai]> select nama from pegawai where nama like '%Asep%';
++---------------+
+| nama          |
++---------------+
+| Asep saipudin |
++---------------+
+1 row in set (0.001 sec)
+
+
+47.Cari data pegawai yang huruf kelimanya huruf S 
+MariaDB [dbpegawai]> #Jawaban No 47
+MariaDB [dbpegawai]> select nama from pegawai where nama like '____s';
+Empty set (0.001 sec)
+
+
+
+
